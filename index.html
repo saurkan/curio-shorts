@@ -1,0 +1,120 @@
+<script type="importmap">
+  {
+    "imports": {
+      "@google/genai": "https://esm.sh/@google/genai@^0.7.0",
+      "marked": "https://esm.sh/marked@^15.0.7"
+    }
+  }
+</script>
+<div id="modal-overlay" class="hidden"></div>
+
+<div id="error-modal" class="modal hidden">
+  <h2>Error</h2>
+  <p id="error-modal-message">An unexpected error occurred.</p>
+  <div class="modal-actions">
+    <button id="close-error-modal-btn" class="modal-btn primary">OK</button>
+  </div>
+</div>
+
+<div id="api-key-modal" class="modal hidden">
+  <h2>Gemini API Key</h2>
+  <p>Please provide your own Gemini API key.</p>
+  <div class="form-group">
+      <label for="api-key-input">API Key</label>
+      <input type="password" id="api-key-input" placeholder="Enter your API key">
+  </div>
+  <div class="modal-actions">
+    <button id="close-api-key-modal-btn" class="modal-btn">Cancel</button>
+    <button id="save-api-key-btn" class="modal-btn primary">Save</button>
+  </div>
+</div>
+
+<div class="tiktok-container">
+  <header>
+    <div class="logo">
+      <h1>CurioShorts</h1><span class="logo-subtitle">swap brain rot for brain fuel</span>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search" />
+      <button>
+        <svg width="24" height="24" viewBox="0 0 24" 24" fill="rgba(255, 255, 255, 0.34)"><path d="m10.51 18.22-.33-.3-.04-.04c1.8-2.1 2.86-4.8 2.86-7.88C13 4.01 9.99 1 6.5 1S0 4.01 0 7.5c0 3.49 3.01 6.5 6.5 6.5 2.88 0 5.42-1.8 6.47-4.32l.33.3.04.04 4.8 4.8c.55.55 1.44.55 1.99 0s.55-1.44 0-1.99l-4.8-4.8Zm-4.01-1.72c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4Z"></path></svg>
+      </button>
+    </div>
+    <div class="header-actions">
+      <button id="add-api-btn" class="action-btn" aria-label="Add API Key">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
+      </button>
+      <button id="theme-toggle" class="action-btn" aria-label="Toggle theme">
+        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+    </div>
+  </header>
+  <main class="main-content">
+    <aside class="sidebar left-sidebar">
+      <h2>Creator Tools</h2>
+      <p>1. Choose a narrator:</p>
+      <select id="character-selector">
+        <option value="" disabled selected>Select a narrator...</option>
+        <option value="Cat">Cat</option>
+        <option value="Dog">Dog</option>
+        <option value="Spider-Man">Spider-Man</option>
+        <option value="Barbie">Barbie</option>
+        <option value="Simba">Simba</option>
+        <option value="Steve (Minecraft)">Steve (Minecraft)</option>
+        <option value="custom">Custom...</option>
+      </select>
+      <p>Or type your own narrator:</p>
+      <input type="text" id="custom-character-input" placeholder="e.g., A wise owl" disabled />
+      <p>2. Choose a style:</p>
+      <div id="shorts-style-selector">
+        <button class="style-btn" data-style="anime">Anime</button>
+        <button class="style-btn" data-style="comic">Comic</button>
+        <button class="style-btn" data-style="photoreal">Photo-Real</button>
+        <button class="style-btn selected" data-style="storybook">Storybook</button>
+        <button class="style-btn" data-style="retro">Retro Game</button>
+        <button class="style-btn" data-style="cinematic">Cinematic</button>
+      </div>
+      <p>3. Choose a voice:</p>
+      <select id="voice-selector">
+        <!-- Voices will be populated by JavaScript -->
+      </select>
+      <p>4. Pick an example:</p>
+      <select id="examples-selector">
+        <option value="" disabled selected>Select an example...</option>
+        <option value="Explain how rain forms?">Explain how rain forms?</option>
+        <option value="Explain why sky is blue?">Explain why sky is blue?</option>
+        <option value="Explain how stars are formed.">Explain how stars are formed.</option>
+        <option value="Explain how seeds turn into plants.">Explain how seeds turn into plants.</option>
+      </select>
+      <p>5. Or ask your own question:</p>
+      <div id="error" hidden></div>
+      <textarea id="input" placeholder="Enter a question."></textarea>
+      <button id="generate-btn">Generate Shorts</button>
+    </aside>
+    <div class="feed-container">
+       <div id="slideshow" hidden></div>
+       <div id="initial-message">
+         <div class="initial-content">
+           <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-film"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
+           <h2>Your Shorts Appears Here</h2>
+           <p>Use the creator tools to generate a new short.</p>
+         </div>
+       </div>
+    </div>
+    <aside class="sidebar right-sidebar">
+       <h2>My Shorts</h2>
+       <div id="history-gallery">
+         <p class="gallery-placeholder">Saved Shorts will appear here.</p>
+       </div>
+    </aside>
+  </main>
+</div>
+<!-- Fallback Music -->
+<audio id="beat-upbeat" src="https://pixabay.com/music/download/audio-111933.mp3" loop preload="auto"></audio>
+<audio id="beat-ballad" src="https://pixabay.com/music/download/audio-112020.mp3" loop preload="auto"></audio>
+<audio id="beat-epic" src="https://pixabay.com/music/download/audio-111932.mp3" loop preload="auto"></audio>
+<script type="module" src="index.js"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html><link rel="stylesheet" href="/index.css">
